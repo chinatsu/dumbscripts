@@ -1,27 +1,36 @@
 #!/bin/bash
 # checkstream.sh
-# Usage: ./checkstream.sh chinatsun
-# Will open http://www.twitch.tv/chinatsun's stream
+# Usage: `./checkstream.sh chinatsun` will open http://www.twitch.tv/chinatsun's stream
 
-# I look up the API directly instead of check online status with livestreamer as I think it's a tad faster.
-OFFLINE=$(curl -is https://api.twitch.tv/kraken/streams/$1/ | grep -c "\"stream\":null")
-VIEWING=$(ps aux | grep -c "[l]ivestreamer .*$1")
-RIGHTNOW=$(date -Iminutes | sed -e 's/[0-9]*$//g' -e 's/[:+]//g')
+if [ -z "$1" ]
+	then
+		echo "No stream specified."
+		exit 1
+fi
+VIEWING=$(ps aux | grep -c "[le]ivestreamer .*$1") # tips fedora
+if [ "$VIEWING" = 1 ]
+	then
+		echo "Already watching."
+		exit 1
+fi
+
+API=$(curl -is https://api.twitch.tv/kraken/streams/$1/) # Let's look at twitch.tv's API. Not yet sure if it's a good idea to have it stored in a var like that.
+OFFLINE=$(echo "$API" | grep -c "\"stream\":null")
+NOEXIST=$(echo "$API" | grep -c "does not exist") 
+RIGHTNOW=$(date -Iminutes | sed -e 's/+[0-9]*$//g' -e 's/[:]/-/g') # Used as a filenaming scheme for archiving streams if that's what you want.
+if [ "$NOEXIST" = 1 ] 
+	then 
+		echo "Channel does not exist."
+		exit 1
+fi
 if [ "$OFFLINE" = 1 ]
 	then
 		echo "Stream offline."
-		exit 0
-  # Let's not open the same stream more than once at a time.
-	else if [ "$VIEWING" = 0 ]
-		then
-			# Comment the killall line to run multiple instances (probably useful if you wish to dump several streams)
-			killall livestreamer 2>/dev/null;
-			# echo "Dumping to $1-$RIGHTNOW"
-			# Uncomment `-o $1-$RIGHTNOW' for saving the stream instead of open a media player.
-			livestreamer twitch.tv/$1 best #-o $1-$RIGHTNOW
-			exit 0
-		else
-			echo "Already watching."
-			exit 0
-		fi
+		exit 1
+fi
+if [ "$VIEWING" = 0 ] # This if is a little pointless but hey~
+	then
+		killall livestreamer 2>/dev/null;
+		#echo "Dumping to $1-$RIGHTNOW" # Uncomment this and the stuff on the next line in order to use this as a stream archiving tool.
+		livestreamer twitch.tv/$1 medium # -o $1-$RIGHTNOW # A good idea might be to specify the path to where you want the streams to be saved to. i.e. -o /home/Cockbot/streams/$1-$RIGHTNOW
 fi
