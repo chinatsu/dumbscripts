@@ -16,11 +16,23 @@ fi
 
 API=$(curl -is https://api.twitch.tv/kraken/streams/$1/) # Let's look at twitch.tv's API. Not yet sure if it's a good idea to have it stored in a var like that.
 OFFLINE=$(echo "$API" | grep -c "\"stream\":null")
-NOEXIST=$(echo "$API" | grep -c "does not exist") 
+NOEXIST=$(echo "$API" | grep -c "does not exist")
+BANNED=$(echo "$API" | grep -c "is unavailable")
+JUSTIN=$(echo "$API" | grep -c "is not available on Twitch")
 RIGHTNOW=$(date -Iminutes | sed -e 's/+[0-9]*$//g' -e 's/[:]/-/g') # Used as a filenaming scheme for archiving streams if that's what you want.
 if [ "$NOEXIST" = 1 ] 
 	then 
 		echo "Channel does not exist."
+		exit 1
+fi
+if [ "$BANNED" = 1 ]
+	then
+		echo "Channel is unavailable. This usually means it's been banned. ;_;7"
+		exit 1
+fi
+if [ "$JUSTIN" = 1 ]
+	then
+		echo "Channel is not available on Twitch. This means it's a Justin.tv-exclusive channel."
 		exit 1
 fi
 if [ "$OFFLINE" = 1 ]
