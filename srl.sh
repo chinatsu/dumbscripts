@@ -1,13 +1,10 @@
 #!/bin/bash
-# Depends on
+# `srl.sh` aka I nearly understand what I'm doing
+# Depends on 
 # jshon (http://kmkeen.com/jshon)
 # livestreamer (https://github.com/chrippa/livestreamer)
 # curl (http://curl.haxx.se)
-case $1 in
-[!0-9]*) echo -e "Argument \033[32m$1 \033[0mis not a number."; exit 1 ;;
-'') a=10;;
-*) a=$1;;
-esac
+a=$(( $(tput lines) - 4 ))
 echo "Top $a streamers:"
 curl -s http://api.speedrunslive.com/test/team > .tempapi
 jshon -e channels -a -e channel -e display_name -u -p -e meta_game -u < .tempapi |
@@ -18,13 +15,14 @@ cat -n
 echo -e '\nInput a\033[32m number \033[0mto select a stream.'
 read num
 case $num in
-[!0-9]*) echo "That's not a number, exiting."; exit 1; rm -f .tempapi ;;
-*) numfix=$((num - 1))
-name=$(jshon -e channels -e $numfix -e channel -e name -u < .tempapi)
-viewers=$(jshon -e channels -e $numfix -e channel -e current_viewers -u < .tempapi)
-title=$(jshon -e channels -e $numfix -e channel -e title -u < .tempapi)
-rm -f .tempapi
-echo -e "\nCurrent viewers: \033[032m$viewers\n\033[0mTitle: \033[032m$title\n\033[0m"
-livestreamer http://twitch.tv/"$name" best
-exit 1 ;;
+ [!0-9]*) echo "That's not a number, exiting."; exit 1; rm -f .tempapi ;;
+       *) numfix=$((num - 1))
+          name=$(jshon -e channels -e $numfix -e channel -e name -u < .tempapi)
+          viewers=$(jshon -e channels -e $numfix -e channel -e current_viewers -u < .tempapi)
+          title=$(jshon -e channels -e $numfix -e channel -e title -u < .tempapi)
+          rm -f .tempapi
+          echo -e "\nCurrent viewers: \033[032m$viewers\n\033[0mTitle: \033[032m$title\n\033[0m"
+          livestreamer http://twitch.tv/"$name" medium,source -v
+          exit 1
+	
 esac
