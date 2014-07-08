@@ -11,3 +11,6 @@ A script that checks the http://twitch.tv API if a specified stream is online. O
 
 ##thread.php
 A quick redirect script to find the speedrunning general thread on /vg/. The regex should in 99% of cases work just fine, but it hasn't really been tested extensively yet. I wanted to have a bookmark of sorts to quickly get to the thread, instead of using .thread in the IRC channel, or wade through the catalog.
+
+##shitradio.py
+A little PyQT applet for listening to radio, it has almost no use, no comments and no sanity.
