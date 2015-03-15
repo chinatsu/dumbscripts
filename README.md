@@ -5,8 +5,13 @@ Scripts for various purposes.
 
 ##srl.py
 A simple script that looks up the http://speedrunslive.com API and outputs the top `n` streamers. `n` is determined by your tty's height.
-You can search for a game with the `--game` flag, there are a few aliases for some popular games. For example: `./srl.py --game sm64` will output Super Mario 64 streams.
-`./srl.py --game sm64` also equals `./srl.py --game 'super mario 64'`. You can view all the current aliases near the top of the script.
+
+###Flags
+* `-g term`, `--game term`: Filters output based on game. Usage: `srl.py -g lttp` - only displays A Link To The Past streams. Equals `srl.py -g 'a link to the past'`. View the few search aliases near the top of the script.
+* `-s int`, `--streams int`: Displays int amount of streams instead of the default based on tty height.
+* `-r int-int`, `--range int-int`: Displays streams within the set range of viewers. Usage: `srl.py -r 0-10` - only displays streams with 0 to 10 viewers.
+* `--race y/n`: Displays streams currently in a race. Useful along with the `-g` flag. Usage: `srl.py --race y` - only displays streams in a race. `--race n` will show streams not in a race.
+
 
 ##checkstream.sh
 A script that checks the http://twitch.tv API if a specified stream is online. Once the API successfully goes through some checks (if the stream is already open, if it's offline/banned, etc.), it will spawn a livestreamer instance. I did it this way for the sake of a cronjob scenario. Since livestreamer has the option to output the stream into a file, one can easily use it for archiving streams for watching later.
