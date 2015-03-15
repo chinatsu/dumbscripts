@@ -9,6 +9,7 @@ if [ -z "$1" ]
 		exit 1
 fi
 if ( ps aux | grep -q "[le]ivestreamer .*$1" ) # tips fedora
+	then
 		echo "Already watching."
 		exit 1
 fi
