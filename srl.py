@@ -35,6 +35,7 @@ parser.add_argument('--game', '-g', help='Displays streams with matching string 
 parser.add_argument('--race', help='Displays streams currently in a race', nargs='?', metavar='y/n', default=False)
 parser.add_argument('--range', '-r', help='Display streams within the specified range of viewers', nargs='?', metavar='min-max', default=None)
 parser.add_argument('--streams', '-s', help='Display amount of streams', nargs='?', type=int, default=None)
+parser.add_argument('--reverse', help='Sort streams by least to most viewers', action='store_true', default=False)
 args = parser.parse_args()
 
 if args.race:
@@ -85,14 +86,17 @@ def populateList(apiResponse, args):
             elif channel['api'] == 'hitbox':
                 url = 'http://hitbox.tv/' + channel['name']
             name = channel['display_name']
-            viewers = channel['current_viewers']
+            viewers = int(channel['current_viewers'])
             if args.game == None or args.game.lower() in game.lower():
                 if (args.race and is_racing) or (not args.race and not is_racing):
                     if (args.range and maxRange >= viewers >= minRange) or not args.range:
                         printList.append({'game': game, 'title': title, 'url': url, 'name': name, 'viewers': viewers})
             else:
                 pass
-            finalList = sorted(printList, key=lambda k: k['viewers'], reverse=True)
+            if args.reverse:
+                finalList = sorted(printList, key=lambda k: k['viewers'])
+            else:
+                finalList = sorted(printList, key=lambda k: k['viewers'], reverse=True)
         return finalList
 
     else:
@@ -100,7 +104,7 @@ def populateList(apiResponse, args):
 
 
 def termDisplay(pList, tHeight):
-    if len(pList) < tHeight:
+    if pList and len(pList) < tHeight:
         listLength = len(pList)
     else:
         listLength = tHeight
@@ -111,16 +115,14 @@ def termDisplay(pList, tHeight):
     return listLength
     
 pList = populateList(getApi(), args)
-if len(pList) == 0:
+if not pList or len(pList) == 0:
     print('No streams to display')
 elif pList != None:
     listLength = termDisplay(pList, tHeight)
     streamSelect = input('Select stream to watch [1-' + str(listLength) + ']: ')
     try:
         streamInt = int(streamSelect)
-        if streamInt > listLength:
-            print('Selected stream out of range')
-        elif streamInt == 0:
+        if streamInt > listLength or streamInt == 0:
             print('Selected stream out of range')
         else:
             selectedStream = pList[streamInt - 1]

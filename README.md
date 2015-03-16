@@ -10,7 +10,8 @@ A simple script that looks up the http://speedrunslive.com API and outputs the t
 * `-g term`, `--game term`: Filters output based on game. Usage: `srl.py -g lttp` - only displays A Link To The Past streams. Equals `srl.py -g 'a link to the past'`. View the few search aliases near the top of the script.
 * `-s int`, `--streams int`: Displays int amount of streams instead of the default based on tty height.
 * `-r int-int`, `--range int-int`: Displays streams within the set range of viewers. Usage: `srl.py -r 0-10` - only displays streams with 0 to 10 viewers.
-* `--race y/n`: Displays streams currently in a race. Useful along with the `-g` flag. Usage: `srl.py --race y` - only displays streams in a race. `--race n` will show streams not in a race.
+* `--race y/n`: Displays streams currently in a race. Useful along with the `-g` flag. Usage: `srl.py --race y` - only displays streams in a race. `--race n` will only show streams not in a race.
+* `--reverse`: Reverses list based on viewer count.
 
 
 ##checkstream.sh
