@@ -11,6 +11,7 @@ A simple script that looks up the http://speedrunslive.com API and outputs the t
 * `-s int`, `--streams int`: Displays int amount of streams instead of the default based on tty height.
 * `-r int-int`, `--range int-int`: Displays streams within the set range of viewers. Usage: `srl.py -r 0-10` - only displays streams with 0 to 10 viewers.
 * `--race y/n`: Displays streams currently in a race. Useful along with the `-g` flag. Usage: `srl.py --race y` - only displays streams in a race. `--race n` will only show streams not in a race.
+* `--quality q`: Passes quality options to livestreamer. Default is 'medium,source'; preferring medium with fallback on source.
 * `--reverse`: Reverses list based on viewer count.
 
 
