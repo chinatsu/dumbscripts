@@ -32,29 +32,29 @@ gameAliases = {
                'tyd': 'thousand year door'
                }
 
-parser = argparse.ArgumentParser()
+cli = argparse.ArgumentParser()
 tError = '\033[032mError: \033[0m'
 tWarning = '\033[036mWarning: \033[0m'
-parser.add_argument('--game', '-g',
+cli.add_argument('--game', '-g',
                     help='Displays streams with matching string in games',
                     nargs='?', metavar='search', default=None)
-parser.add_argument('--race',
+cli.add_argument('--race',
                     help='Displays streams currently in a race',
                     nargs='?', metavar='y/n', default=None)
-parser.add_argument('--range', '-r',
+cli.add_argument('--range', '-r',
                     help='Display streams within the specified range of viewers',
                     nargs='?', metavar='min-max', default=None)
-parser.add_argument('--streams', '-s',
+cli.add_argument('--streams', '-s',
                     help='Display amount of streams',
                     nargs='?', metavar='n', type=int, default=None)
-parser.add_argument('--reverse',
+cli.add_argument('--reverse',
                     help='Sort streams by least to most viewers',
                     action='store_true', default=False)
-parser.add_argument('--quality', '-q',
+cli.add_argument('--quality', '-q',
                     help='Sets livestreamer quality. Default: \'medium, source\'',
                     nargs='?', metavar='quality', default=livestreamerQuality)
 
-args = parser.parse_args()
+args = cli.parse_args()
 
 if args.race:
     if args.race.lower() in ['yes', 'y', 'true', '1']:
@@ -136,7 +136,7 @@ def termDisplay(pList, tHeight):
     else:
         listLength = tHeight
     for channel in range(0,listLength):
-        print(str(int(channel) + 1) + ': \033[034m' + pList[channel]['name'] +
+        print(str(int(channel) + 1) + ': \033[032m' + pList[channel]['name'] +
               '\033[0m -- '+ pList[channel]['game'] + '\n\t\033[033m' +
               pList[channel]['title'] + '\033[0m -- Viewers: ' + str(pList[channel]['viewers']))
     return listLength
