@@ -1,3 +1,7 @@
+#!/usr/bin/bash
+# you might want to get `jq`, `xrandr`, `feh`, `curl` and `imagemagick` 
+# some of these are standard on some distros
+
 wp_folder = "/home/cn/Hello"                                  # modify this if you want to actually use this lmao
 res=$(xrandr | sed -rn "s/.*current (\w+) x (\w+).*/\1x\2/p") # xrandr output to imagemagick -size format
 rand_deg=$(shuf -i 0-359 -n 1)                                # get a random number between 0 and 359
