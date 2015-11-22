@@ -14,7 +14,7 @@ info=($(echo "$gradients" | jq -r ".["$rand_sel"] |           # some jq magic to
 convert -size "$res" \                                        # let's generate our gradient image according to our screen size
         gradient:"${info[0]}"-"${info[1]}" \                  # colors[0] and colors[1] from the json for our colors
         -distort SRT "$rand_deg" \                            # rotate our gradient with the random number
-        "$wp_folder"/wp.pn;
+        "$wp_folder"/wp.png;
 
 feh --bg-fill "$wp_folder"/wp.png                             # use the newly generated gradient as wallpaper
 echo "${info[2]}"                                             # echo the name for the gradient
