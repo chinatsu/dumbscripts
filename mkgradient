@@ -1,0 +1,16 @@
+wp_folder = "/home/cn/Hello"                                  # modify this if you want to actually use this lmao
+res=$(xrandr | sed -rn "s/.*current (\w+) x (\w+).*/\1x\2/p") # xrandr output to imagemagick -size format
+rand_deg=$(shuf -i 0-359 -n 1)                                # get a random number between 0 and 359
+gradients=$(curl -s uigradients.com/gradients.json)           # download the gradients from uigradients.com
+rand_sel=$(shuf -i 0-$(echo "$gradients" | jq length) -n 1)   # select a random gradient
+info=($(echo "$gradients" | jq -r ".["$rand_sel"] |           # some jq magic to turn the relevant data to a bash list
+                                   .colors[0], \
+                                   .colors[1], \
+                                   .name"))
+convert -size "$res" \                                        # let's generate our gradient image according to our screen size
+        gradient:"${info[0]}"-"${info[1]}" \                  # colors[0] and colors[1] from the json for our colors
+        -distort SRT "$rand_deg" \                            # rotate our gradient with the random number
+        "$wp_folder"/wp.pn;
+
+feh --bg-fill "$wp_folder"/wp.png                             # use the newly generated gradient as wallpaper
+echo "${info[2]}"                                             # echo the name for the gradient
